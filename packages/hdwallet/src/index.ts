@@ -2,11 +2,13 @@ import HDNode from "hdkey";
 import {
   generateMnemonic,
   mnemonicToSeedSync,
-  // mnemonicToSeed
+  validateMnemonic,
+  mnemonicToSeed,
 } from "bip39";
 
 export class HDWallet {
-  static defaultPath = "m/44'/503'/0'/0"; // default Conflux path-503
+  static defaultBasePath = "m/44'/503'/0'/0"; // default Conflux path-503
+
   mnemonic: string;
   password?: string;
   seed: Buffer;
@@ -14,6 +16,14 @@ export class HDWallet {
 
   static generateMnemonic(): string {
     return generateMnemonic();
+  }
+
+  static validateMnemonic(mnemonic: string, wordlist?: string[]): boolean {
+    return validateMnemonic(mnemonic, wordlist);
+  }
+
+  static mnemonicToSeed(mnemonic: string, password?: string): Promise<Buffer> {
+    return mnemonicToSeed(mnemonic, password);
   }
 
   constructor(mnemonic: string, password?: string) {
@@ -28,6 +38,6 @@ export class HDWallet {
   }
 
   getPrivateKeyByIndex(index: number): Buffer {
-    return this.getPrivateKey(`${HDWallet.defaultPath}/${index}`);
+    return this.getPrivateKey(`${HDWallet.defaultBasePath}/${index}`);
   }
 }
